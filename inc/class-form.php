@@ -45,9 +45,9 @@ class LM_Form {
         global $wp;
         $action = home_url( add_query_arg( array(), $wp->request ) );
 
-        $return = '<form class="lm-form" method="post" enctype="multipart/form-data" action="' . $action . '">';
+        $return = '<form class="lm-form" method="post" enctype="multipart/form-data" action="">';
 
-        $return .= '<input type="hidden" class="lm-form--hidden" name="lm-form-submitted" value="' . $form_id . '">';
+        $return .= '<input type="hidden" class="lm-form--hidden" name="lm-form-submitted" value="' . esc_attr( $form_id ) . '">';
 
         if( $echo ) {
             echo $return;
@@ -77,7 +77,7 @@ class LM_Form {
      */
     private function get_text_input( $field_id = '', $field ) {
         $attr = '';
-        $attr .= ' type="' . esc_attr( $field['type'] ) . '"';
+        $attr .= 'type="' . esc_attr( $field['type'] ) . '"';
         $attr .= ' value="' . esc_attr( $field['value'] ) . '"';
         $attr .= ' class="lm-form--input lm-form--input__text"';
         $attr .= ' name="' . esc_attr( $field_id ) . '"';
@@ -89,11 +89,25 @@ class LM_Form {
 
 
     /**
+     * Get textarea
+     */
+    private function get_textarea( $field_id = '', $field ) {
+        $attr = '';
+        $attr .= 'class="lm-form--input lm-form--input__textarea"';
+        $attr .= ' name="' . esc_attr( $field_id ) . '"';
+        $attr .= ' id="' . esc_attr( $field_id ) . '"';
+        $attr .= ' placeholder="' . esc_attr( $field['placeholder'] ) . '"';
+        $attr .= ' ' . $field['attributes'];
+        return '<textarea ' . $attr . '>' . esc_textarea( $field['value'] ) . '</textarea>';
+    }
+
+
+    /**
      * Get select field
      */
     private function get_select_input( $field_id = '', $field ) {
         $attr = '';
-        $attr .= ' class="lm-form--input lm-form--input__select"';
+        $attr .= 'class="lm-form--input lm-form--input__select"';
         $attr .= ' name="' . esc_attr( $field_id ) . '"';
         $attr .= ' id="' . esc_attr( $field_id ) . '"';
         $attr .= ' ' . $field['attributes'];
@@ -114,20 +128,15 @@ class LM_Form {
      */
     public function the_field( $field_id, $echo = true ) {
 
-        global $lm_field_defaults;
         global $lm_leadgen_form;
 
         $field = $lm_leadgen_form['fields'][$field_id];
-        
-        // Set defaults
-        $field = $field + $lm_field_defaults;
-
-        if( $field['error'] ) {
-            $field['class'] .= 'lm-form-item__error';
-        }
 
         // Get the input html
         switch( $field['type'] ) {
+            case 'textarea':
+                $input = $this->get_textarea( $field_id, $field );
+                break;
             case 'select':
                 $input = $this->get_select_input( $field_id, $field );
                 break;
@@ -140,6 +149,12 @@ class LM_Form {
                 break;
         }
 
+        // Class
+        if( $field['error'] ) {
+            $field['class'] .= 'lm-form-item__error';
+        }
+
+        // Label
         $label = esc_html( $field['label'] );
         if( $field['required'] ) {
             $label .= '<span class="lm-form--asterix">*</span>';
@@ -166,7 +181,9 @@ class LM_Form {
      * Do submit button
      */
     public function the_submit_button( $text = 'Submit', $echo = true ) {
-        $return = '<button class="lm-form--btn" type="submit">' . $text . '</button>';
+        $return = '<div class="lm-form--item lm-form-item__footer">';
+            $return .= '<button class="lm-form--btn" type="submit">' . $text . '</button>';
+        $return .= '</div>';
 
         if( $echo ) {
             echo $return;

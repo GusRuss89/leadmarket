@@ -30,6 +30,9 @@ function lm_process_form_entry() {
                 case 'email':
                     $field_value = sanitize_email( $field_value );
                     break;
+                case 'textarea':
+                    $field_value = wp_kses_post( $field_value );
+                    break;
                 case 'text':
                 default:
                     $field_value = sanitize_text_field( $field_value );
@@ -77,7 +80,6 @@ function lm_process_form_entry() {
 
     // Create a new post from the entry ===
     $post_arr = array(
-        'post_content'   => 'Test',
         'post_status'    => 'draft',
         'post_type'      => 'lm_lead',
         'comment_status' => 'closed',
@@ -87,6 +89,9 @@ function lm_process_form_entry() {
 
     // Title
     $post_arr['post_title'] = $lm_leadgen_form['fields']['lead-name']['value'] . ' - ' . $lm_leadgen_form['fields']['lead-suburb']['value'];
+
+    // Content
+    $post_arr['post_content'] = $lm_leadgen_form['fields']['post-content']['value'];
 
     // Meta
     foreach( $lm_leadgen_form['fields'] as $key => $field ) {

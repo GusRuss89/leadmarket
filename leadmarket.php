@@ -44,6 +44,10 @@ $lm_leadgen_form = array(
     'id'          => 'lead-gen-form',
     'redirect_to' => 2,
     'fields'      => array(
+        'post-content' => array(
+            'label' => 'Any other details',
+            'type'  => 'textarea'
+        ) + $lm_field_defaults,
         'lead-name' => array(
             'label'    => 'Your name',
             'required' => true
