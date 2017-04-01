@@ -24,8 +24,19 @@ if (!defined('ABSPATH')) die('-1');
 
 
 /**
- * We'll temporarily define our form here
+ * Set constants
  */
+define( 'LM_PLUGIN_VER', '0.0.2' );
+define( 'LM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
+
+/**
+ * Temporary constants (should be mostly turned into options)
+ */
+define( 'LM_LEADS_PAGE', 35 );
+define( 'LM_LOGIN_PAGE', 37 );
+global $lm_protected_pages;
+$lm_protected_pages = array( LM_LEADS_PAGE );
 global $lm_leadgen_form;
 global $lm_field_defaults;
 $lm_field_defaults = array(
@@ -110,7 +121,11 @@ $lm_leadgen_form = array(
  */
 require_once plugin_dir_path( __FILE__ ) . 'inc/helper-functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/post-types.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/class-gamajo-template-loader.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/class-template-loader.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-form.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-emails.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/class-users.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/process-entry.php';
 require_once plugin_dir_path( __FILE__ ) . 'frontend/shortcodes.php';
+require_once plugin_dir_path( __FILE__ ) . 'activate.php';
