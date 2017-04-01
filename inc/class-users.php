@@ -34,7 +34,7 @@ class LM_Users {
      */
     private function __construct() {
 
-        add_action( 'init', array( $this, 'maybe_redirect_to_login' ) );
+        add_action( 'template_redirect', array( $this, 'maybe_redirect_to_login' ) );
 
 	}
 
@@ -71,7 +71,7 @@ class LM_Users {
      * Check if user can view leads
      */
     public function user_can_view_leads() {
-        return true;
+        return current_user_can( 'lm_view_leads' );
     }
 
 

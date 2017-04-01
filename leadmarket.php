@@ -127,5 +127,5 @@ require_once plugin_dir_path( __FILE__ ) . 'inc/class-form.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-emails.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-users.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/process-entry.php';
-require_once plugin_dir_path( __FILE__ ) . 'frontend/shortcodes.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/shortcodes.php';
 require_once plugin_dir_path( __FILE__ ) . 'activate.php';
