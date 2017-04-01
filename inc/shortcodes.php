@@ -9,21 +9,11 @@ if (!defined('ABSPATH')) die('-1');
  * Outputs the leadmarket lead-gen form
  */
 function leadmarket_form() {
-
-    global $lm_leadgen_form;
-    $form = LM_Form::get_instance();
+    $templates = new LM_Template_Loader;
 	
 	ob_start();
 		
-    $form->the_form_opening_tag( $lm_leadgen_form['id'] );
-
-        foreach( $lm_leadgen_form['fields'] as $key => $field ) {
-            $form->the_field( $key );
-        }
-
-        $form->the_submit_button( 'Get Quotes' );
-
-    $form->the_form_closing_tag();
+    $templates->get_template_part( 'lead_form' );
 
 	$return = ob_get_contents();
 	ob_end_clean();
@@ -41,15 +31,14 @@ function leadmarket_leads() {
 
     $templates = new LM_Template_Loader;
     $users = LM_Users::get_instance();
-
-    if( !$users->user_can_view_leads() ) {
-        $templates->get_template_part( 'access_denied' );
-        return;
-    }
 	
 	ob_start();
 		
-    $templates->get_template_part( 'loop', 'leads' );
+    if( $users->user_can_view_leads() ) {
+        $templates->get_template_part( 'loop', 'leads' );
+    } else {
+        $templates->get_template_part( 'access_denied' );
+    }
 
 	$return = ob_get_contents();
 	ob_end_clean();

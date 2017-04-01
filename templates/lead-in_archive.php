@@ -7,7 +7,7 @@
             <p class="lm-lead-snippet--subtitle">
                 <span class="lm-lead-snippet--subtitle-item">240L / week</span>
                 <span class="lm-lead-snippet--subtitle-item">
-                    Quote requrested <?php echo human_time_diff( get_the_time('U'), current_time('timestamp') ); ?> ago
+                    Quote requested <?php echo human_time_diff( get_the_time('U'), current_time('timestamp') ); ?> ago
                 </span>
             </p>
         </header>

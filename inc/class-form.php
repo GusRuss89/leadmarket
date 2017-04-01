@@ -38,41 +38,6 @@ class LM_Form {
 
 
     /**
-     * Do form tag
-     */
-    public function the_form_opening_tag( $form_id, $echo = true ) {
-
-        global $wp;
-        $action = home_url( add_query_arg( array(), $wp->request ) );
-
-        $return = '<form class="lm-form" method="post" enctype="multipart/form-data" action="">';
-
-        $return .= '<input type="hidden" class="lm-form--hidden" name="lm-form-submitted" value="' . esc_attr( $form_id ) . '">';
-
-        if( $echo ) {
-            echo $return;
-        } else {
-            return $return;
-        }
-
-    }
-
-
-    /**
-     * Close form tag
-     */
-    public function the_form_closing_tag( $echo = true ) {
-        $return = '</form>';
-
-        if( $echo ) {
-            echo $return;
-        } else {
-            return $return;
-        }
-    }
-
-
-    /**
      * Get text field
      */
     private function get_text_input( $field_id = '', $field ) {
@@ -123,16 +88,13 @@ class LM_Form {
 
 
     /**
-     * Do field
-     * @param $field [id, label, description, class, type]
+     * Get input html
      */
-    public function the_field( $field_id, $echo = true ) {
+    public function get_input_html( $field_id ) {
 
         global $lm_leadgen_form;
-
         $field = $lm_leadgen_form['fields'][$field_id];
-
-        // Get the input html
+        
         switch( $field['type'] ) {
             case 'textarea':
                 $input = $this->get_textarea( $field_id, $field );
@@ -149,47 +111,7 @@ class LM_Form {
                 break;
         }
 
-        // Class
-        if( $field['error'] ) {
-            $field['class'] .= 'lm-form-item__error';
-        }
-
-        // Label
-        $label = esc_html( $field['label'] );
-        if( $field['required'] ) {
-            $label .= '<span class="lm-form--asterix">*</span>';
-        }
-
-        $return = '';
-        $return .= '<div class="lm-form--item ' . esc_attr( $field['class'] ) . '">';
-            $return .= '<label class="lm-form--label" for="' . $field_id . '">' . $label . '</label>';
-            if( $field['description'] ) $return .= '<label class="lm-form--description" for="' . esc_attr( $field_id ) . '">' . esc_html( $field['description'] ) . '</label>';
-            $return .= $input;
-            if( $field['error_msg'] ) $return .= '<p class="lm-form--error-msg">' . esc_html( $field['error_msg'] ) . '</p>';
-        $return .= '</div>';
-
-        if( $echo ) {
-            echo $return;
-        } else {
-            return $return;
-        }
-
-    }
-    
-
-    /**
-     * Do submit button
-     */
-    public function the_submit_button( $text = 'Submit', $echo = true ) {
-        $return = '<div class="lm-form--item lm-form-item__footer">';
-            $return .= '<button class="lm-form--btn" type="submit">' . $text . '</button>';
-        $return .= '</div>';
-
-        if( $echo ) {
-            echo $return;
-        } else {
-            return $return;
-        }
+        return $input;
     }
     
 }
