@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) die('-1');
 /**
  * Set constants
  */
-define( 'LM_PLUGIN_VER', '0.0.5' );
+define( 'LM_PLUGIN_VER', '0.0.7' );
 define( 'LM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 

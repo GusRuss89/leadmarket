@@ -62,6 +62,8 @@ class LM_Purchases {
             exit;
         }
 
+        // To do: Make sure the lead hasn't already been purchased
+
         // Do the stuff!
         $lead = get_post( $_GET['lead_id'] );
         if( ! is_object( $lead ) )

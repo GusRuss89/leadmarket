@@ -124,6 +124,7 @@ function lm_purchase_post_type() {
 		'publicly_queryable'    => true,
 		'rewrite'               => false,
 		'capabilities'          => $capabilities,
+		'map_meta_cap'          => true
 	);
 	register_post_type( 'lm_purchase', $args );
 

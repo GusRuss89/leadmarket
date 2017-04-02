@@ -46,3 +46,22 @@ function leadmarket_leads() {
 	return $return;
 }
 add_shortcode( 'leadmarket-leads', 'leadmarket_leads' );
+
+
+/**
+ * Shortcode: [leadmarket-purchases]
+ * Outputs the purchases for the logged-in user
+ */
+function leadmarket_purchases() {
+    $templates = new LM_Template_Loader;
+	
+	ob_start();
+		
+    $templates->get_template_part( 'user', 'purchases' );
+
+	$return = ob_get_contents();
+	ob_end_clean();
+
+	return $return;
+}
+add_shortcode( 'leadmarket-purchases', 'leadmarket_purchases' );

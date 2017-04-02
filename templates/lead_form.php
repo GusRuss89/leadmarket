@@ -9,7 +9,7 @@ $form = LM_Form::get_instance();
 
     <?php do_action( 'lm_form_before_fields', $lm_leadgen_form ); ?>
     
-    <input type="hidden" class="lm-form--hidden" name="lm-form-submitted" value="' . esc_attr( $lm_leadgen_form['id'] ) . '">
+    <input type="hidden" class="lm-form--hidden" name="lm-form-submitted" value="<?php echo esc_attr( $lm_leadgen_form['id'] ); ?>">
 
     <?php foreach( $lm_leadgen_form['fields'] as $field_id => $field ) :
         

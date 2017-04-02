@@ -9,6 +9,8 @@ function lm_process_form_entry() {
 
     global $lm_leadgen_form;
 
+    //lm_print_pre( $_POST );
+
     // Bail if we don't have a submission
     if( !isset( $_POST['lm-form-submitted'] ) || $_POST['lm-form-submitted'] !== $lm_leadgen_form['id'] )
         return;
