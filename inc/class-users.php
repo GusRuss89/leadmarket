@@ -44,8 +44,10 @@ class LM_Users {
      */
     public function create_client_role() {
         add_role( 'lm_client', 'LeadMarket Client', array(
-            'read' => true,
-            'lm_view_leads' => true
+            'read'               => true,
+            'lm_view_leads'      => true,
+            'lm_view_purchases'  => true,
+            'lm_create_purchase' => true
         ) );
     }
 
@@ -55,7 +57,9 @@ class LM_Users {
      */
     public function update_admin_caps() {
         $role = get_role( 'administrator' );
-        $role->add_cap( 'lm_view_leads' ); 
+        $role->add_cap( 'lm_view_leads' );
+        $role->add_cap( 'lm_view_purchases' ); 
+        $role->add_cap( 'lm_create_purchase' );
     }
 
 
@@ -72,6 +76,22 @@ class LM_Users {
      */
     public function user_can_view_leads() {
         return current_user_can( 'lm_view_leads' );
+    }
+
+
+    /**
+     * Check if user can view purchases
+     */
+    public function user_can_view_purchases() {
+        return current_user_can( 'lm_view_purchases' );
+    }
+
+
+    /**
+     * Check if user can create purchases
+     */
+    public function user_can_create_purchase() {
+        return current_user_can( 'lm_create_purchase' );
     }
 
 

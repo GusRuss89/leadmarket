@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) die('-1');
 /**
  * Set constants
  */
-define( 'LM_PLUGIN_VER', '0.0.2' );
+define( 'LM_PLUGIN_VER', '0.0.5' );
 define( 'LM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 
@@ -35,6 +35,7 @@ define( 'LM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
  */
 define( 'LM_LEADS_PAGE', 35 );
 define( 'LM_LOGIN_PAGE', 37 );
+define( 'LM_ACCESS_DENIED_PAGE', 41 );
 global $lm_protected_pages;
 $lm_protected_pages = array( LM_LEADS_PAGE );
 global $lm_leadgen_form;
@@ -126,6 +127,8 @@ require_once plugin_dir_path( __FILE__ ) . 'inc/class-template-loader.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-form.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-emails.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/class-users.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/class-purchases.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/process-entry.php';
 require_once plugin_dir_path( __FILE__ ) . 'inc/shortcodes.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/api.php';
 require_once plugin_dir_path( __FILE__ ) . 'activate.php';
