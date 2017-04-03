@@ -53,10 +53,22 @@ class LM_Email {
         $to = get_option( 'admin_email' );
         $subject = 'New lead: ' . $post->post_title;
         
-        $html = 'New lead awaiting moderation. <a href="' . get_edit_post_link( $post_id ) . '">Moderate now</a>.';
+        $html = '<p>New lead awaiting moderation. <a href="' . get_edit_post_link( $post_id ) . '">Moderate now</a>.</p>';
         foreach( $post_meta as $key => $field ) {
-            $html .= '<p><strong>' . esc_html( $lm_leadgen_form['fields'][$key]['label'] ) . '</strong><br />';
-            $html .= esc_html( get_post_meta( $post_id, $key, true ) ) . '</p>';
+            if( $key !== 'post_content' ) {
+                $field_value = get_post_meta( $post_id, $key, true );
+                $html .= '<div style="margin-bottom: 16px;"><strong>' . esc_html( $lm_leadgen_form['fields'][$key]['label'] ) . '</strong><br />';
+                if( is_array( $field_value ) ) {
+                    $html .= '<ul>';
+                        foreach( $field_value as $val ) {
+                            $html .= '<li>' . esc_html( $val ) . '</li>';
+                        }
+                    $html .= '</ul>';
+                } else {
+                    $html .= esc_html( $field_value );
+                }
+                $html .= '</div>';
+            }
         }
         $html .= '<h2>Message</h2>';
         $html .= apply_filters( 'the_content', $post->post_content );

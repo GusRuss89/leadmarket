@@ -9,8 +9,6 @@ function lm_process_form_entry() {
 
     global $lm_leadgen_form;
 
-    //lm_print_pre( $_POST );
-
     // Bail if we don't have a submission
     if( !isset( $_POST['lm-form-submitted'] ) || $_POST['lm-form-submitted'] !== $lm_leadgen_form['id'] )
         return;
@@ -29,6 +27,11 @@ function lm_process_form_entry() {
 
             // Sanitize first ===
             switch( $field['type'] ) {
+                case 'checkbox':
+                    foreach( $field_value as $i => $value ) {
+                        $field_value[$i] = sanitize_text_field( $value );
+                    }
+                    break;
                 case 'email':
                     $field_value = sanitize_email( $field_value );
                     break;
@@ -97,8 +100,13 @@ function lm_process_form_entry() {
 
     // Meta
     foreach( $lm_leadgen_form['fields'] as $key => $field ) {
-        $post_arr['meta_input'][$key] = $field['value'];
+        if( $key !== 'post_content' ) {
+            $post_arr['meta_input'][$key] = $field['value'];
+        }
     }
+
+    // Add form id to meta
+    $post_arr['meta_input']['form'] = sanitize_text_field( 'lm-form-submitted' );
 
     // Insert the post
     $lead_id = wp_insert_post( $post_arr );

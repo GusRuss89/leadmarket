@@ -41,7 +41,7 @@ $form = LM_Form::get_instance();
 
             <?php do_action( 'lm_form_before_field', $field_id, $field, $lm_leadgen_form ); ?>
 
-            <?php echo $form->get_input_html( $field_id ); ?>
+            <?php echo $form->get_input_html( $field_id, $field ); ?>
 
             <?php do_action( 'lm_form_after_field', $field_id, $field, $lm_leadgen_form ); ?>
 

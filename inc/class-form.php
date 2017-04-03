@@ -40,7 +40,7 @@ class LM_Form {
     /**
      * Get text field
      */
-    private function get_text_input( $field_id = '', $field ) {
+    private function get_text_input( $field_id, $field ) {
         $attr = '';
         $attr .= 'type="' . esc_attr( $field['type'] ) . '"';
         $attr .= ' value="' . esc_attr( $field['value'] ) . '"';
@@ -56,7 +56,7 @@ class LM_Form {
     /**
      * Get textarea
      */
-    private function get_textarea( $field_id = '', $field ) {
+    private function get_textarea( $field_id, $field ) {
         $attr = '';
         $attr .= 'class="lm-form--input lm-form--input__textarea"';
         $attr .= ' name="' . esc_attr( $field_id ) . '"';
@@ -70,7 +70,7 @@ class LM_Form {
     /**
      * Get select field
      */
-    private function get_select_input( $field_id = '', $field ) {
+    private function get_select_input( $field_id, $field ) {
         $attr = '';
         $attr .= 'class="lm-form--input lm-form--input__select"';
         $attr .= ' name="' . esc_attr( $field_id ) . '"';
@@ -88,12 +88,41 @@ class LM_Form {
 
 
     /**
+     * Get checkboxes
+     */
+    private function get_checkboxes( $field_id, $field ) {
+        $html = '<div class="lm-form--checkboxes>';
+            $i = 0;
+            foreach( $field['options'] as $key => $value ) {
+                $i++;
+
+                $id = $field_id . '__' . $i;
+                $checked = false;
+                if( is_array( $field['value'] ) ) {
+                    $checked = in_array( $key, $field['value'] );
+                }
+                
+                $attr = '';
+                $attr .= 'type="checkbox"';
+                $attr .= ' id="' . esc_attr( $id ) . '"';
+                $attr .= ' name="' . esc_attr( $field_id ) . '[]"';
+                $attr .= ' value="' . esc_attr( $key ) . '"';
+                $attr .= $checked ? ' checked' : '';
+                
+                $html .= '<div class="lm-form--checkbox-item">';
+                    $html .= '<input ' . $attr . '>';
+                    $html .= '<label for="' . esc_attr( $id ) . '">' . esc_html( $value ) . '</label>';
+                $html .= '</div>';
+            }
+        $html .= '</select>';
+        return $html;
+    }
+
+
+    /**
      * Get input html
      */
-    public function get_input_html( $field_id ) {
-
-        global $lm_leadgen_form;
-        $field = $lm_leadgen_form['fields'][$field_id];
+    public function get_input_html( $field_id, $field ) {
         
         switch( $field['type'] ) {
             case 'textarea':
@@ -101,6 +130,9 @@ class LM_Form {
                 break;
             case 'select':
                 $input = $this->get_select_input( $field_id, $field );
+                break;
+            case 'checkbox':
+                $input = $this->get_checkboxes( $field_id, $field );
                 break;
             case 'text':
             case 'email':

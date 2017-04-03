@@ -50,12 +50,35 @@ $lm_field_defaults = array(
     'error'       => false,
     'error_msg'   => '',
     'attributes'  => '',
-    'placeholder' => ''
+    'placeholder' => '',
+    'sensitive'   => false
 );
 $lm_leadgen_form = array(
     'id'          => 'lead-gen-form',
     'redirect_to' => 2,
     'fields'      => array(
+        'waste-types' => array(
+            'label'       => 'Rubbish type',
+            'description' => 'What types of waste do you need collected? Select all that apply.',
+            'type'        => 'checkbox',
+            'required'    => true,
+            'options'     => array(
+                'General waste' => 'General waste',
+                'Cardboard'     => 'Cardboard',
+                'Recycling'     => 'Recycling'
+            )
+        ) + $lm_field_defaults,
+        'waste-amount' => array(
+            'label'       => 'Estimated amount of waste per week (litres)',
+            'description' => 'How many litres of waste do you think you\'ll need removed per week? As a guide, a council wheelie bin holds 240L.',
+            'type'        => 'number',
+            'required'    => true
+        ) + $lm_field_defaults,
+        'waste-collection-schedule' => array(
+            'label'       => 'Collection schedule',
+            'description' => 'How many times per week would you like your bins emptied? Any particular days?',
+            'required'    => true
+        ) + $lm_field_defaults,
         'post-content' => array(
             'label' => 'Any other details',
             'type'  => 'textarea'
@@ -65,27 +88,32 @@ $lm_leadgen_form = array(
             'required' => true
         ) + $lm_field_defaults,
         'lead-email' => array(
-            'label'    => 'Email address',
-            'type'     => 'email',
-            'required' => true
+            'label'     => 'Email address',
+            'type'      => 'email',
+            'required'  => true,
+            'sensitive' => true
         ) + $lm_field_defaults,
         'lead-company-name' => array(
             'label'    => 'Company name',
-            'required' => true
+            'required' => true,
+            'sensitive' => true
         ) + $lm_field_defaults,
         'lead-phone-number' => array(
             'label'    => 'Phone number',
             'type'     => 'tel',
-            'required' => true
+            'required' => true,
+            'sensitive' => true
         ) + $lm_field_defaults,
         'lead-street-address' => array(
             'label'    => 'Street address',
             'type'     => 'text',
-            'required' => true
+            'required' => true,
+            'sensitive' => true
         ) + $lm_field_defaults,
         'lead-address-l2' => array(
             'label'    => 'Address line 2',
             'type'     => 'text',
+            'sensitive' => true
         ) + $lm_field_defaults,
         'lead-suburb' => array(
             'label'    => 'Suburb',
