@@ -35,6 +35,10 @@ class LM_Users {
     private function __construct() {
 
         add_action( 'template_redirect', array( $this, 'maybe_redirect_to_login' ) );
+        add_action( 'register_form', array( $this, 'add_profile_fields' ) );
+        add_filter( 'registration_errors', array( $this, 'registration_errors' ) );
+        add_action( 'user_register', array( $this, 'user_register' ) );
+        add_action( 'user_register', array( $this, 'set_new_user_role' ) );
 
 	}
 
@@ -107,6 +111,92 @@ class LM_Users {
             wp_redirect( get_page_link( LM_LOGIN_PAGE ) );
             exit;
         }
+    }
+
+
+    /**
+     * Add fields to the registration form
+     */
+    public function add_profile_fields() {
+
+        // Company
+        $company = ( ! empty( $_POST['client_company'] ) ) ? trim( $_POST['client_company'] ) : '';
+
+        ?>
+            <p>
+                <label for="client_company"><?php _e( 'Company', 'leadmarket' ) ?><br />
+                <input type="text" name="client_company" id="client_company" class="input" value="<?php echo esc_attr( wp_unslash( $company ) ); ?>" size="25" /></label>
+            </p>
+        <?php
+
+    }
+
+
+    /**
+     * Filter registration to ensure custom
+     * registration fields are valid
+     */
+    public function registration_errors( $errors, $sanitized_user_login, $user_email ) {
+    
+        if ( empty( $_POST['client_company'] ) || trim( $_POST['client_company'] ) == '' ) {
+            $errors->add( 'client_company_error', __( '<strong>ERROR</strong>: You must include a company name.', 'leadmarket' ) );
+        }
+
+        return $errors;
+    }
+
+
+    /**
+     * Save custom registration fields on registration
+     */
+    public function user_register( $user_id ) {
+        if ( ! empty( $_POST['client_company'] ) ) {
+            update_user_meta( $user_id, 'client_company', sanitize_text_field( trim( $_POST['client_company'] ) ) );
+        }
+    }
+
+
+    /**
+     * Set role to client for new users if they were created as a subscriber
+     */
+    public function set_new_user_role( $user_id ) {
+        $user = get_user_by( 'id', $user_id );
+
+        if( 'subscriber' === $user->roles[0] ) {
+            $user->roles[0] = 'lm_client';
+        }
+
+        wp_update_user( $user );
+    }
+
+
+    /**
+     * Get user's balance for the month
+     */
+    public function get_client_balance( $user_id = 0 ) {
+        $balance = 0;
+        $user_id = $user_id === 0 ? get_current_user_id() : $user_id;
+        $current_year = date( 'Y' );
+        $current_month = date( 'n' );
+        $purchases_query = new WP_Query( array(
+            'posts_per_page' => -1,
+            'post_type'      => 'lm_purchase',
+            'meta_key'       => 'user_id',
+            'meta_value'     => $user_id,
+            'year'           => $current_year,
+            'monthnum'       => $current_month
+        ) );
+
+        if( is_array( $purchases_query->posts ) ) {
+            foreach( $purchases_query->posts as $purchase ) {
+                $price = get_post_meta( $purchase->ID, 'price', true );
+                $price = floatval( $price );
+                if( is_numeric( $price ) ) {
+                    $balance += $price;
+                }
+            }
+        }
+        return $balance;
     }
 
 

@@ -48,3 +48,16 @@ function lm_client_has_purchased_lead( $lead_id, $user_id = 0 ) {
 function lm_user_can_view_sensitive_lead( $lead_id ) {
     return lm_client_has_purchased_lead( $lead_id, get_current_user_id() );
 }
+
+/**
+ * Gets the client's balance for the current month
+ */
+function lm_get_client_balance( $format = true ) {
+    $users = LM_Users::get_instance();
+    $balance = $users->get_client_balance();
+    if( $format ) {
+        return lm_format_money( $balance );
+    } else {
+        return $balance;
+    }
+}

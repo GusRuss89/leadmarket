@@ -5,9 +5,10 @@
 $user_id = get_current_user_id();
 
 $purchases_query = new WP_Query( array(
+    'posts_per_page' => -1,
     'post_type'      => 'lm_purchase',
     'meta_key'       => 'user_id',
-    'meta_value_num' => $user_id
+    'meta_value'     => $user_id
 ) );
 
 ?>
@@ -37,7 +38,7 @@ $purchases_query = new WP_Query( array(
                         </a>
                     </td>
                     <td><?php echo esc_html( $date ); ?></td>
-                    <td><?php echo '$' . number_format_i18n( $price, 2 ); ?></td>
+                    <td><?php echo lm_format_money( $price ); ?></td>
                 </tr>
             <?php endwhile; ?>
         </tbody>

@@ -54,6 +54,9 @@ class LM_Email {
         $subject = 'New lead: ' . $post->post_title;
         
         $html = '<p>New lead awaiting moderation. <a href="' . get_edit_post_link( $post_id ) . '">Moderate now</a>.</p>';
+
+        // To do: This should really loop through form fields and retrieve post meta
+        // not the other way around
         foreach( $post_meta as $key => $field ) {
             if( $key !== 'post_content' ) {
                 $field_value = get_post_meta( $post_id, $key, true );

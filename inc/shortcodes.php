@@ -81,6 +81,16 @@ add_shortcode( 'leadmarket-purchases', 'leadmarket_purchases' );
 
 
 /**
+ * Shortcode: [leadmarket-balance]
+ * Outputs the balance this month for the logged in user
+ */
+function leadmarket_balance() {
+	 return lm_get_client_balance();
+}
+add_shortcode( 'leadmarket-balance', 'leadmarket_balance' );
+
+
+/**
  * Shortcode: [leadmarket-sensitive]
  * Checks if user has access to sensitive info and redacts
  * Only for use within a lead
