@@ -51,7 +51,8 @@ $lm_field_defaults = array(
     'error_msg'   => '',
     'attributes'  => '',
     'placeholder' => '',
-    'sensitive'   => false
+    'sensitive'   => false,
+    'key-metric'  => false
 );
 $lm_leadgen_form = array(
     'id'          => 'lead-gen-form',
@@ -72,7 +73,8 @@ $lm_leadgen_form = array(
             'label'       => 'Estimated amount of waste per week (litres)',
             'description' => 'How many litres of waste do you think you\'ll need removed per week? As a guide, a council wheelie bin holds 240L.',
             'type'        => 'number',
-            'required'    => true
+            'required'    => true,
+            'key-metric'  => true
         ) + $lm_field_defaults,
         'waste-collection-schedule' => array(
             'label'       => 'Collection schedule',

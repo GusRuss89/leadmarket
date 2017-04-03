@@ -28,3 +28,23 @@ function lm_get_buy_lead_link( $lead_id ) {
         'lead_id'  => $lead_id
     ) );
 }
+
+/**
+ * Check if a client has access to a particular lead
+ */
+function lm_client_has_purchased_lead( $lead_id, $user_id = 0 ) {
+    $user_id = $user_id === 0 ? get_current_user_id() : $user_id;
+    $user_leads = get_user_meta( $user_id, 'available_leads', true );
+    if( is_array( $user_leads ) ) {
+        return in_array( $lead_id, $user_leads );
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Check if current user can view sensitive details of a given lead
+ */
+function lm_user_can_view_sensitive_lead( $lead_id ) {
+    return lm_client_has_purchased_lead( $lead_id, get_current_user_id() );
+}

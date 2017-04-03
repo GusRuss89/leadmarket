@@ -2,10 +2,22 @@
 
 global $lm_leadgen_form;
 $templates = new LM_Template_Loader;
-   
-$leads_query = new WP_Query( array(
+
+$user_id = get_current_user_id();
+$user_purchased_leads = get_user_meta( $user_id, 'available_leads', true );
+$leads_query_args = array(
     'post_type' => 'lm_lead'
-) );
+);
+
+if( isset( $data->show ) && is_array( $user_purchased_leads ) ) {
+    if( $data->show === 'purchased' ) {
+        $leads_query_args['post__in'] = $user_purchased_leads;
+    } else if( $data->show === 'not-purchased' ) {
+        $leads_query_args['post__not_in'] = $user_purchased_leads;
+    }
+}
+   
+$leads_query = new WP_Query( $leads_query_args );
 
 ?>
 
