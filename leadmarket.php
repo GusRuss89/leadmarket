@@ -36,10 +36,9 @@ define( 'LM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LM_LEADS_PAGE', 35 );
 define( 'LM_LOGIN_PAGE', 37 );
 define( 'LM_ACCESS_DENIED_PAGE', 41 );
-global $lm_protected_pages;
+global $lm_lead_price, $lm_protected_pages, $lm_leadgen_form, $lm_field_defaults;
 $lm_protected_pages = array( LM_LEADS_PAGE );
-global $lm_leadgen_form;
-global $lm_field_defaults;
+$lm_lead_price = 8.99;
 $lm_field_defaults = array(
     'label'       => '',
     'description' => '',
@@ -52,7 +51,10 @@ $lm_field_defaults = array(
     'attributes'  => '',
     'placeholder' => '',
     'sensitive'   => false,
-    'key-metric'  => false
+    'key-metric'  => false,
+    's-width'     => '',
+    'm-width'     => '',
+    'l-width'     => ''
 );
 $lm_leadgen_form = array(
     'id'          => 'lead-gen-form',
@@ -73,6 +75,7 @@ $lm_leadgen_form = array(
             'label'       => 'Estimated amount of waste per week (litres)',
             'description' => 'How many litres of waste do you think you\'ll need removed per week? As a guide, a council wheelie bin holds 240L.',
             'type'        => 'number',
+            'placeholder' => 'E.g. 600',
             'required'    => true,
             'key-metric'  => true
         ) + $lm_field_defaults,
@@ -87,22 +90,26 @@ $lm_leadgen_form = array(
         ) + $lm_field_defaults,
         'lead-name' => array(
             'label'    => 'Your name',
+            'm-width'  => 'one-half',
             'required' => true
         ) + $lm_field_defaults,
         'lead-email' => array(
             'label'     => 'Email address',
             'type'      => 'email',
+            'm-width'  => 'one-half',
             'required'  => true,
             'sensitive' => true
         ) + $lm_field_defaults,
         'lead-company-name' => array(
             'label'    => 'Company name',
+            'm-width'  => 'one-half',
             'required' => true,
             'sensitive' => true
         ) + $lm_field_defaults,
         'lead-phone-number' => array(
             'label'    => 'Phone number',
             'type'     => 'tel',
+            'm-width'  => 'one-half',
             'required' => true,
             'sensitive' => true
         ) + $lm_field_defaults,
@@ -112,19 +119,23 @@ $lm_leadgen_form = array(
             'required' => true,
             'sensitive' => true
         ) + $lm_field_defaults,
-        'lead-address-l2' => array(
+        /*'lead-address-l2' => array(
             'label'    => 'Address line 2',
             'type'     => 'text',
             'sensitive' => true
-        ) + $lm_field_defaults,
+        ) + $lm_field_defaults,*/
         'lead-suburb' => array(
             'label'    => 'Suburb',
             'type'     => 'text',
+            'l-width'  => 'two-quarters',
             'required' => true
         ) + $lm_field_defaults,
         'lead-state' => array(
             'label'    => 'State',
             'type'     => 'select',
+            's-width'  => 'one-half',
+            'l-width'  => 'one-quarter',
+            'value'    => 'QLD',
             'options'  => array(
                 'ACT' => 'ACT',
                 'NSW' => 'NSW',
@@ -140,6 +151,8 @@ $lm_leadgen_form = array(
         'lead-postcode' => array(
             'label'      => 'Post code',
             'type'       => 'number',
+            's-width'  => 'one-half',
+            'l-width'  => 'one-quarter',
             'attributes' => 'minlength="4" maxlength="4"',
             'required'   => true
         ) + $lm_field_defaults,

@@ -81,6 +81,25 @@ add_shortcode( 'leadmarket-purchases', 'leadmarket_purchases' );
 
 
 /**
+ * Shortcode: [leadmarket-billing]
+ * Outputs the full billing page (purchases, balance, invoices)
+ */
+function leadmarket_billing() {
+    $templates = new LM_Template_Loader;
+	
+	ob_start();
+		
+    $templates->get_template_part( 'user', 'billing' );
+
+	$return = ob_get_contents();
+	ob_end_clean();
+
+	return $return;
+}
+add_shortcode( 'leadmarket-billing', 'leadmarket_billing' );
+
+
+/**
  * Shortcode: [leadmarket-balance]
  * Outputs the balance this month for the logged in user
  */
@@ -102,7 +121,7 @@ function leadmarket_sensitive( $atts, $content = null ) {
         !lm_user_can_view_sensitive_lead( $lead_id )
     ) {
         
-        return 'Redacted';
+        return '<abbr title="Purchase this lead to unlock this information">*****</abbr>';
 
     } else {
         return lm_remove_wpautop( $content );

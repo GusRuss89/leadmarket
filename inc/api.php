@@ -61,3 +61,78 @@ function lm_get_client_balance( $format = true ) {
         return $balance;
     }
 }
+
+/**
+ * Gets the lead data for a particular lead
+ */
+function lm_get_lead_data( $lead_id = 0 ) {
+    global $lm_leadgen_form;
+
+    $id = $lead_id === 0 ? get_the_ID() : $lead_id;
+    $form = get_post_meta( $id, 'form', true ); // For now we know which form this will be
+    $form = $lm_leadgen_form;
+    $details = array();
+    foreach( $form['fields'] as $field_id => $field ) {
+        if( $field_id !== 'post-content' ) {
+            array_push( $details, array(
+                'label'     => $field['label'],
+                'value'     => get_post_meta( $id, $field_id, true ),
+                'sensitive' => $field['sensitive']
+            ) );
+        }
+    }
+
+    return $details;
+}
+
+/**
+ * Get the lead price for a particular lead
+ */
+function lm_get_lead_price( $format = true ) {
+    global $lm_lead_price;
+    if( $format ) {
+        return lm_format_money( $lm_lead_price );
+    } else {
+        return $lm_lead_price;
+    }
+}
+
+/**
+ * Echo the html for a detail list
+ * @param $arr array of label-value pairs
+ * @param $show (string) all|open|sensitive
+ * @param $twocol bool
+ */
+function lm_do_detail_list( $arr, $show = 'all', $twocol = false ) {
+    $class = 'lm-uldl';
+    if( $twocol ) {
+        $class .= ' lm-uldl__twocol';
+    }
+    ?>
+    <ul class="<?php echo $class; ?>">
+        <?php foreach( $arr as $detail ) : ?>
+            <?php if( is_array( $detail['value'] ) ) : ?>
+                <?php $detail['value'] = implode( ', ', $detail['value'] ); ?>
+            <?php endif; ?>
+            <?php if( trim( $detail['value'] ) !== '' && $detail['label'] !== 'post-content' ) : ?>
+                <?php if( 
+                    $show === 'all' ||
+                    ( $show === 'sensitive' && $detail['sensitive'] ) ||
+                    ( $show === 'open' && !$detail['sensitive'] )
+                ) : ?>
+                    <li>
+                        <dl>
+                            <dt><?php echo esc_html( $detail['label'] ); ?>:</dt>
+                            <?php if( $detail['sensitive'] ) : ?>
+                                <dd><?php echo do_shortcode( '[leadmarket-sensitive]' . esc_html( $detail['value'] ) . '[/leadmarket-sensitive]' ); ?></dd>
+                            <?php else : ?>
+                                <dd><?php echo esc_html( $detail['value'] ); ?></dd>
+                            <?php endif; ?>
+                        </dl>
+                    </li>
+                <?php endif; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </ul>
+    <?php
+}

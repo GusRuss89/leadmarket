@@ -91,7 +91,7 @@ class LM_Form {
      * Get checkboxes
      */
     private function get_checkboxes( $field_id, $field ) {
-        $html = '<div class="lm-form--checkboxes>';
+        $html = '<div class="lm-form--checkboxes">';
             $i = 0;
             foreach( $field['options'] as $key => $value ) {
                 $i++;
@@ -114,7 +114,7 @@ class LM_Form {
                     $html .= '<label for="' . esc_attr( $id ) . '">' . esc_html( $value ) . '</label>';
                 $html .= '</div>';
             }
-        $html .= '</select>';
+        $html .= '</div>';
         return $html;
     }
 

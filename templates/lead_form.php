@@ -15,9 +15,10 @@ $form = LM_Form::get_instance();
         
         // Field class
         $field['class'] = 'lm-form--item';
-        if( $field['error'] ) {
-            $field['class'] .= ' lm-form-item__error';
-        }
+        $field['class'] .= $field['error'] ? ' lm-form--item__error' : '';
+        $field['class'] .= $field['s-width'] ? ' lm-form--item__s-' . $field['s-width'] : '';
+        $field['class'] .= $field['m-width'] ? ' lm-form--item__m-' . $field['m-width'] : '';
+        $field['class'] .= $field['l-width'] ? ' lm-form--item__l-' . $field['l-width'] : '';
 
         // Field label
         $label = esc_html( $field['label'] );
@@ -27,7 +28,7 @@ $form = LM_Form::get_instance();
 
         ?>
 
-        <div class="<?php esc_attr( $field['class'] ); ?>">
+        <div class="<?php echo esc_attr( $field['class'] ); ?>">
 
             <?php do_action( 'lm_form_before_field_label', $field_id, $field, $lm_leadgen_form ); ?>
 
@@ -61,7 +62,7 @@ $form = LM_Form::get_instance();
 
         <?php do_action( 'lm_form_before_submit', $lm_leadgen_form ); ?>
 
-        <button class="lm-form--btn" type="submit">Get Quotes</button>
+        <button class="lm-form--btn lm-btn" type="submit">Get Quotes</button>
 
         <?php do_action( 'lm_form_after_submit', $lm_leadgen_form ); ?>
 

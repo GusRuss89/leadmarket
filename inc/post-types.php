@@ -32,12 +32,6 @@ function lm_lead_post_type() {
 		'items_list_navigation' => __( 'Leads list navigation', 'leadmarket' ),
 		'filter_items_list'     => __( 'Filter leads list', 'leadmarket' ),
 	);
-	$rewrite = array(
-		'slug'                  => 'leads',
-		'with_front'            => true,
-		'pages'                 => true,
-		'feeds'                 => true,
-	);
 	$args = array(
 		'label'                 => __( 'Lead', 'leadmarket' ),
 		'description'           => __( 'Customers who have completed your lead gen form', 'leadmarket' ),
@@ -55,7 +49,7 @@ function lm_lead_post_type() {
 		'has_archive'           => false,		
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
-		'rewrite'               => $rewrite,
+		'rewrite'               => false,
 		'capability_type'       => 'page',
 	);
 	register_post_type( 'lm_lead', $args );
