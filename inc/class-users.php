@@ -36,9 +36,12 @@ class LM_Users {
 
         add_action( 'template_redirect', array( $this, 'maybe_redirect_to_login' ) );
         add_action( 'template_redirect', array( $this, 'redirect_portal_to_leads' ) );
-        add_action( 'register_form', array( $this, 'add_profile_fields' ) );
-        add_action( 'user_register', array( $this, 'user_register' ) );
+        add_action( 'register_form', array( $this, 'add_registration_fields' ) );
+        add_action( 'user_register', array( $this, 'update_custom_user_meta' ) );
+        add_action( 'profile_update', array( $this, 'update_custom_user_meta' ) );
         add_action( 'user_register', array( $this, 'set_new_user_role' ) );
+        add_action( 'show_user_profile', array( $this, 'add_profile_fields' ) );
+        add_action( 'edit_user_profile', array( $this, 'add_profile_fields' ) );
 
         add_filter( 'wp_get_nav_menu_items', array( $this, 'exclude_protected_menu_items' ), null, 3 );
         add_filter( 'registration_errors', array( $this, 'registration_errors' ) );
@@ -106,6 +109,7 @@ class LM_Users {
      * Don't show protected pages in menus for logged-out users
      */
     public function exclude_protected_menu_items( $items, $menu, $args ) {
+        //lm_print_pre( $items );
         if( $this->user_can_view_leads() )
             return $items;
         
@@ -152,18 +156,67 @@ class LM_Users {
     /**
      * Add fields to the registration form
      */
-    public function add_profile_fields() {
+    public function add_registration_fields() {
 
-        // Company
         $company = ( ! empty( $_POST['client_company'] ) ) ? trim( $_POST['client_company'] ) : '';
+        $sales_email = ( ! empty( $_POST['client_sales_email'] ) ) ? trim( $_POST['client_sales_email'] ) : '';
+        $billing_email = ( ! empty( $_POST['client_billing_email'] ) ) ? trim( $_POST['client_billing_email'] ) : '';
 
         ?>
             <p>
-                <label for="client_company"><?php _e( 'Company', 'leadmarket' ) ?><br />
+                <label for="client_sales_email"><?php _e( 'Sales Email (receives lead notifications)', 'leadmarket' ) ?><br />
+                <input type="text" name="client_sales_email" id="client_sales_email" class="input" value="<?php echo esc_attr( wp_unslash( $sales_email ) ); ?>" size="25" /></label>
+            </p>
+            <p>
+                <label for="client_billing_email"><?php _e( 'Billing Email (receives invoices)', 'leadmarket' ) ?><br />
+                <input type="text" name="client_billing_email" id="client_billing_email" class="input" value="<?php echo esc_attr( wp_unslash( $billing_email ) ); ?>" size="25" /></label>
+            </p>
+            <p>
+                <label for="client_company"><?php _e( 'Company Name', 'leadmarket' ) ?><br />
                 <input type="text" name="client_company" id="client_company" class="input" value="<?php echo esc_attr( wp_unslash( $company ) ); ?>" size="25" /></label>
             </p>
         <?php
 
+    }
+
+
+    /**
+     * Add fields to the profile page
+     * Note: This is only used in the WordPress admin, Theme My Login fields are added
+     * in the profile-form.php template in [theme]/theme-my-login/profile-form.php
+     */
+    public function add_profile_fields( $user ) {
+        if( !is_admin() )
+            return;
+        ?>
+        <h2>LeadMarket Fields</h2>
+        <table class="form-table">
+            <tr>
+                <th>
+                    <label for="client_company"><?php _e('Company'); ?></label>
+                </th>
+                <td>
+                    <input type="text" name="client_company" id="client_company" value="<?php echo esc_attr( get_the_author_meta( 'client_company', $user->ID ) ); ?>" class="regular-text" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="client_sales_email"><?php _e('Sales Email'); ?></label>
+                </th>
+                <td>
+                    <input type="email" name="client_sales_email" id="client_sales_email" value="<?php echo esc_attr( get_the_author_meta( 'client_sales_email', $user->ID ) ); ?>" class="regular-text" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="client_billing_email"><?php _e('Billing Email'); ?></label>
+                </th>
+                <td>
+                    <input type="email" name="client_billing_email" id="client_billing_email" value="<?php echo esc_attr( get_the_author_meta( 'client_billing_email', $user->ID ) ); ?>" class="regular-text" />
+                </td>
+            </tr>
+        </table>
+        <?php
     }
 
 
@@ -176,17 +229,29 @@ class LM_Users {
         if ( empty( $_POST['client_company'] ) || trim( $_POST['client_company'] ) == '' ) {
             $errors->add( 'client_company_error', __( '<strong>ERROR</strong>: You must include a company name.', 'leadmarket' ) );
         }
+        if ( !empty( $_POST['client_sales_email'] ) && !is_email( $_POST['client_sales_email'] ) ) {
+            $errors->add( 'client_sales_email_error', __( '<strong>ERROR</strong>: Please enter a valid sales email address.', 'leadmarket' ) );
+        }
+        if ( !empty( $_POST['client_billing_email'] ) && !is_email( $_POST['client_billing_email'] ) ) {
+            $errors->add( 'client_billing_email_error', __( '<strong>ERROR</strong>: Please enter a valid billing email address.', 'leadmarket' ) );
+        }
 
         return $errors;
     }
 
 
     /**
-     * Save custom registration fields on registration
+     * Save custom registration fields on registration and profile update
      */
-    public function user_register( $user_id ) {
+    public function update_custom_user_meta( $user_id ) {
         if ( ! empty( $_POST['client_company'] ) ) {
             update_user_meta( $user_id, 'client_company', sanitize_text_field( trim( $_POST['client_company'] ) ) );
+        }
+        if ( ! empty( $_POST['client_sales_email'] ) && is_email( $_POST['client_sales_email'] ) ) {
+            update_user_meta( $user_id, 'client_sales_email', sanitize_text_field( trim( $_POST['client_sales_email'] ) ) );
+        }
+        if ( ! empty( $_POST['client_billing_email'] ) && is_email( $_POST['client_billing_email'] ) ) {
+            update_user_meta( $user_id, 'client_billing_email', sanitize_text_field( trim( $_POST['client_billing_email'] ) ) );
         }
     }
 
