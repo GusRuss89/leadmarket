@@ -34,10 +34,12 @@ define( 'LM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
  * Temporary constants (should be mostly turned into options)
  */
 define( 'LM_LEADS_PAGE', 35 );
-define( 'LM_LOGIN_PAGE', 37 );
+define( 'LM_LOGIN_PAGE', 68 );
+define( 'LM_CLIENT_PORTAL_PAGE', 98 );
+define( 'LM_BILLING_PAGE', 45 );
 define( 'LM_ACCESS_DENIED_PAGE', 41 );
 global $lm_lead_price, $lm_protected_pages, $lm_leadgen_form, $lm_field_defaults;
-$lm_protected_pages = array( LM_LEADS_PAGE );
+$lm_protected_pages = array( LM_LEADS_PAGE, LM_CLIENT_PORTAL_PAGE, LM_BILLING_PAGE );
 $lm_lead_price = 8.99;
 $lm_field_defaults = array(
     'label'       => '',
@@ -72,8 +74,8 @@ $lm_leadgen_form = array(
             )
         ) + $lm_field_defaults,
         'waste-amount' => array(
-            'label'       => 'Estimated amount of waste per week (litres)',
-            'description' => 'How many litres of waste do you think you\'ll need removed per week? As a guide, a council wheelie bin holds 240L.',
+            'label'       => 'Estimated litres of waste per week',
+            'description' => 'Hint: a council wheelie bin holds 240L.',
             'type'        => 'number',
             'placeholder' => 'E.g. 600',
             'required'    => true,
@@ -81,7 +83,7 @@ $lm_leadgen_form = array(
         ) + $lm_field_defaults,
         'waste-collection-schedule' => array(
             'label'       => 'Collection schedule',
-            'description' => 'How many times per week would you like your bins emptied? Any particular days?',
+            'description' => 'How often would you like your bins emptied? Any particular days?',
             'required'    => true
         ) + $lm_field_defaults,
         'post-content' => array(

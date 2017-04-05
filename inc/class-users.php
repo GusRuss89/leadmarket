@@ -35,10 +35,13 @@ class LM_Users {
     private function __construct() {
 
         add_action( 'template_redirect', array( $this, 'maybe_redirect_to_login' ) );
+        add_action( 'template_redirect', array( $this, 'redirect_portal_to_leads' ) );
         add_action( 'register_form', array( $this, 'add_profile_fields' ) );
-        add_filter( 'registration_errors', array( $this, 'registration_errors' ) );
         add_action( 'user_register', array( $this, 'user_register' ) );
         add_action( 'user_register', array( $this, 'set_new_user_role' ) );
+
+        add_filter( 'wp_get_nav_menu_items', array( $this, 'exclude_protected_menu_items' ), null, 3 );
+        add_filter( 'registration_errors', array( $this, 'registration_errors' ) );
 
 	}
 
@@ -100,6 +103,27 @@ class LM_Users {
 
 
     /**
+     * Don't show protected pages in menus for logged-out users
+     */
+    public function exclude_protected_menu_items( $items, $menu, $args ) {
+        if( $this->user_can_view_leads() )
+            return $items;
+        
+        global $lm_protected_pages;
+        
+        //lm_print_pre( $items );
+
+        foreach ( $items as $key => $item ) {
+            if( in_array( $item->object_id, $lm_protected_pages ) || in_array( $item->post_parent, $lm_protected_pages ) ) {
+                unset( $items[$key] );
+            }
+        }
+
+        return $items;
+    }
+
+
+    /**
      * Redirect to login page if incorrect caps
      */
     public function maybe_redirect_to_login() {
@@ -109,6 +133,17 @@ class LM_Users {
         global $lm_protected_pages;
         if( in_array( get_the_ID(), $lm_protected_pages ) ) {
             wp_redirect( get_page_link( LM_LOGIN_PAGE ) );
+            exit;
+        }
+    }
+
+
+    /**
+     * Redirect portal page to leads page
+     */
+    public function redirect_portal_to_leads() {
+        if( LM_CLIENT_PORTAL_PAGE === get_the_ID() ) {
+            wp_redirect( get_page_link( LM_LEADS_PAGE ) );
             exit;
         }
     }
