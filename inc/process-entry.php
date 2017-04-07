@@ -77,6 +77,30 @@ function lm_process_form_entry() {
 
     // Return now if validation wasn't passed
     if( ! $form_is_valid ) {
+        $lm_leadgen_form['error_msg'] = 'There were errors in your submission. Please correct them and retry.';
+        return;
+    }
+
+    // Recaptcha
+    $recaptcha = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', array(
+        'method' => 'POST',
+        'timeout' => 45,
+        'redirection' => 5,
+        'httpversion' => '1.0',
+        'blocking' => true,
+        'headers' => array(),
+        'body' => array( 
+            'secret'   => RECAPTCHA_SECRET_KEY,
+            'response' => $_POST['g-recaptcha-response'],
+            'remoteip' => $_SERVER['REMOTE_ADDR']
+        ),
+        'cookies' => array()
+    ) );
+
+    $recaptcha_response = json_decode( $recaptcha['body'] );
+
+    if( ! $recaptcha_response->success ) {
+        $lm_leadgen_form['error_msg'] = 'It looks like you might be spamming us. If you\'re seeing this error and not spamming, please get in touch.';
         return;
     }
 

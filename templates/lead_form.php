@@ -2,10 +2,32 @@
 
 global $lm_leadgen_form;
 $form = LM_Form::get_instance();
+$form_id = esc_attr( $lm_leadgen_form['id'] );
+
+wp_enqueue_script( 'recaptcha-api', 'https://www.google.com/recaptcha/api.js', array(), true );
 
 ?>
 
-<form class="lm-form" method="post" enctype="multipart/form-data" action="">
+<script>
+    // Submit handler
+    var onSubmit = function(){
+        document.getElementById('<?php echo $form_id; ?>').submit();
+    };
+    // Show some loading feedback while recaptcha api stuff happens
+    jQuery(document).ready(function($){
+        $('.g-recaptcha').click(function(){
+            $(this).addClass('lm-btn__is-loading');
+        });
+    });
+</script>
+
+<form class="lm-form" id="<?php echo $form_id; ?>" method="post" enctype="multipart/form-data" action="">
+
+    <?php if( $lm_leadgen_form['error_msg'] !== '' ) : ?>
+        <div class="lm-form--item">
+            <p class="lm-form--error-msg lm-form--global-error"><?php echo esc_html( $lm_leadgen_form['error_msg'] ); ?></p>
+        </div>
+    <?php endif; ?>
 
     <?php do_action( 'lm_form_before_fields', $lm_leadgen_form ); ?>
     
@@ -62,7 +84,12 @@ $form = LM_Form::get_instance();
 
         <?php do_action( 'lm_form_before_submit', $lm_leadgen_form ); ?>
 
-        <button class="lm-form--btn lm-btn" type="submit">Get Quotes</button>
+        <button
+            class="g-recaptcha lm-form--btn lm-btn"
+            data-sitekey="<?php echo RECAPTCHA_SITE_KEY; ?>"
+            data-callback="onSubmit">
+            Get Quotes
+        </button>
 
         <?php do_action( 'lm_form_after_submit', $lm_leadgen_form ); ?>
 

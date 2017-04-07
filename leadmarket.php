@@ -38,6 +38,8 @@ define( 'LM_LOGIN_PAGE', 68 );
 define( 'LM_CLIENT_PORTAL_PAGE', 98 );
 define( 'LM_BILLING_PAGE', 45 );
 define( 'LM_ACCESS_DENIED_PAGE', 41 );
+define( 'RECAPTCHA_SITE_KEY', '6Ld38hsUAAAAABAH8tRZjXmbnY_29meQow-7pxhU' );
+define( 'RECAPTCHA_SECRET_KEY', '6Ld38hsUAAAAAOfi9Ve_JK2_6hfBs8ylPeIQlQlG' );
 global $lm_lead_price, $lm_protected_pages, $lm_leadgen_form, $lm_field_defaults;
 $lm_protected_pages = array( LM_LEADS_PAGE, LM_CLIENT_PORTAL_PAGE, LM_BILLING_PAGE );
 $lm_lead_price = 8.99;
@@ -61,6 +63,7 @@ $lm_field_defaults = array(
 $lm_leadgen_form = array(
     'id'          => 'lead-gen-form',
     'redirect_to' => 2,
+    'error_msg'   => '',
     'fields'      => array(
         'waste-types' => array(
             'label'       => 'Rubbish type',
@@ -158,6 +161,14 @@ $lm_leadgen_form = array(
             'attributes' => 'minlength="4" maxlength="4"',
             'required'   => true
         ) + $lm_field_defaults,
+        'privacy' => array(
+            'label' => 'Privacy',
+            'type'  => 'checkbox',
+            'required' => true,
+            'options' => array(
+                'agree' => 'I agree that my information may be passed to ONLY the relevant waste management companies and no-one else.'
+            )
+        )
     )
 );
 
