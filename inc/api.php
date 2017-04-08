@@ -76,6 +76,7 @@ function lm_get_lead_data( $lead_id = 0 ) {
         if( $field_id !== 'post-content' ) {
             array_push( $details, array(
                 'label'     => $field['label'],
+                'type'      => $field['type'],
                 'value'     => get_post_meta( $id, $field_id, true ),
                 'sensitive' => $field['sensitive']
             ) );
@@ -98,6 +99,33 @@ function lm_get_lead_price( $format = true ) {
 }
 
 /**
+ * Get detail html
+ * Handle arrays, types (email, phone etc) and sensitive info
+ */
+function lm_get_detail_html( $detail ) {
+    $return = '';
+    $html = '';
+    // Array values to strings
+    if( is_array( $detail['value'] ) ) {
+        $detail['value'] = implode( ', ', $detail['value'] );
+    }
+    $html = esc_html( $detail['value'] );
+    // Types
+    if( 'email' === $detail['type'] ) {
+        $html = '<a href="mailto:' . esc_attr( $detail['value'] ) . '">' . esc_html( $detail['value'] ) . '</a>';
+    } else if( 'tel' === $detail['type'] ) {
+        $html = '<a href="tel:' . esc_attr( str_replace( ' ', '', $detail['value'] ) ) . '">' . esc_html( $detail['value'] ) . '</a>';
+    }
+    // Sensitive?
+    if( $detail['sensitive'] ) {
+        $return = do_shortcode( '[leadmarket-sensitive]' . $html . '[/leadmarket-sensitive]' );
+    } else {
+        $return = $html;
+    }
+    return $return;
+}
+
+/**
  * Echo the html for a detail list
  * @param $arr array of label-value pairs
  * @param $show (string) all|open|sensitive
@@ -111,9 +139,6 @@ function lm_do_detail_list( $arr, $show = 'all', $twocol = false ) {
     ?>
     <ul class="<?php echo $class; ?>">
         <?php foreach( $arr as $detail ) : ?>
-            <?php if( is_array( $detail['value'] ) ) : ?>
-                <?php $detail['value'] = implode( ', ', $detail['value'] ); ?>
-            <?php endif; ?>
             <?php if( trim( $detail['value'] ) !== '' && $detail['label'] !== 'post-content' ) : ?>
                 <?php if( 
                     $show === 'all' ||
@@ -123,11 +148,7 @@ function lm_do_detail_list( $arr, $show = 'all', $twocol = false ) {
                     <li>
                         <dl>
                             <dt><?php echo esc_html( $detail['label'] ); ?>:</dt>
-                            <?php if( $detail['sensitive'] ) : ?>
-                                <dd><?php echo do_shortcode( '[leadmarket-sensitive]' . esc_html( $detail['value'] ) . '[/leadmarket-sensitive]' ); ?></dd>
-                            <?php else : ?>
-                                <dd><?php echo esc_html( $detail['value'] ); ?></dd>
-                            <?php endif; ?>
+                            <dd><?php echo lm_get_detail_html( $detail ); ?></dd>
                         </dl>
                     </li>
                 <?php endif; ?>

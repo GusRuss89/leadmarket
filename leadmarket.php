@@ -73,7 +73,8 @@ $lm_leadgen_form = array(
             'options'     => array(
                 'General waste' => 'General waste',
                 'Cardboard'     => 'Cardboard',
-                'Recycling'     => 'Recycling'
+                'Recycling'     => 'Recycling',
+                'Other'         => 'Other (please specify in "Any other details")'
             )
         ) + $lm_field_defaults,
         'waste-amount' => array(
@@ -87,11 +88,13 @@ $lm_leadgen_form = array(
         'waste-collection-schedule' => array(
             'label'       => 'Collection schedule',
             'description' => 'How often would you like your bins emptied? Any particular days?',
+            'placeholder' => 'E.g. Weekly on Tuesdays',
             'required'    => true
         ) + $lm_field_defaults,
         'post-content' => array(
-            'label' => 'Any other details',
-            'type'  => 'textarea'
+            'label'       => 'Any other details',
+            'description' => 'E.g. any specific types of waste? Already know what type of bins you want? Already have your own bins?',
+            'type'        => 'textarea'
         ) + $lm_field_defaults,
         'lead-name' => array(
             'label'    => 'Your name',
