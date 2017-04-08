@@ -139,7 +139,8 @@ function lm_do_detail_list( $arr, $show = 'all', $twocol = false ) {
     ?>
     <ul class="<?php echo $class; ?>">
         <?php foreach( $arr as $detail ) : ?>
-            <?php if( trim( $detail['value'] ) !== '' && $detail['label'] !== 'post-content' ) : ?>
+            <?php $value = lm_get_detail_html( $detail ); ?>
+            <?php if( trim( $value ) !== '' && $detail['label'] !== 'post-content' ) : ?>
                 <?php if( 
                     $show === 'all' ||
                     ( $show === 'sensitive' && $detail['sensitive'] ) ||
@@ -148,7 +149,7 @@ function lm_do_detail_list( $arr, $show = 'all', $twocol = false ) {
                     <li>
                         <dl>
                             <dt><?php echo esc_html( $detail['label'] ); ?>:</dt>
-                            <dd><?php echo lm_get_detail_html( $detail ); ?></dd>
+                            <dd><?php echo $value; ?></dd>
                         </dl>
                     </li>
                 <?php endif; ?>

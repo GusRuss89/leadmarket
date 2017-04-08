@@ -171,7 +171,7 @@ $lm_leadgen_form = array(
             'options' => array(
                 'agree' => 'I agree that my information may be passed to ONLY the relevant waste management companies and no-one else.'
             )
-        )
+        ) + $lm_field_defaults
     )
 );
 
